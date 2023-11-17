@@ -3,8 +3,11 @@ package com.suhas.easychat;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -25,6 +28,8 @@ import com.suhas.easychat.utils.AndroidUtil;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 
 public class OTP_activity extends AppCompatActivity {
@@ -48,13 +53,17 @@ public class OTP_activity extends AppCompatActivity {
         phone_number = getIntent().getExtras().getString("phone");
         sendOTP(phone_number,false);
 
-        next_button.setOnClickListener(new View.OnClickListener() {
+        next_button.setOnClickListener(view -> {
+            String entered_otp = otp_input.getText().toString();
+            PhoneAuthCredential credential = PhoneAuthProvider.getCredential(verificationCode,entered_otp);
+            signIn(credential);
+            setInProgress(true);
+        });
+
+        resend_otp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String entered_otp = otp_input.getText().toString();
-                PhoneAuthCredential credential = PhoneAuthProvider.getCredential(verificationCode,entered_otp);
-                signIn(credential);
-                setInProgress(true);
+                sendOTP(phone_number,true);
             }
         });
 
@@ -70,6 +79,7 @@ public class OTP_activity extends AppCompatActivity {
     }
 
     void sendOTP(String phoneNumber,boolean isResend){
+        startResendTimer();
         setInProgress(true);
         PhoneAuthOptions.Builder builder = PhoneAuthOptions.newBuilder(mAuth)
                 .setPhoneNumber(phoneNumber)
@@ -136,5 +146,30 @@ public class OTP_activity extends AppCompatActivity {
     });
 
     }
+    void startResendTimer() {
+        resend_otp.setEnabled(false);
+
+        Timer timer = new Timer();
+        timer.scheduleAtFixedRate(new TimerTask() {
+            @SuppressLint("SetTextI18n")
+            @Override
+            public void run() {
+                timeOutSeconds--;
+
+                runOnUiThread(() -> {
+                    resend_otp.setText("Resend Otp in " + timeOutSeconds + " seconds");
+
+                    if (timeOutSeconds <= 0) {
+                        timeOutSeconds = 60L;
+                        timer.cancel();
+                        resend_otp.setEnabled(true);
+                    }
+                });
+            }
+        }, 0, 1000);
+    }
+
+
+
 
 }
