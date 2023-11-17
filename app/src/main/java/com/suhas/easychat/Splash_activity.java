@@ -15,17 +15,14 @@ public class Splash_activity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if(FireBaseUtil.isLoggedIn()){
-                    startActivity(new Intent(Splash_activity.this, MainActivity.class));
-                }else{
-                    startActivity(new Intent(getApplicationContext(),Login_phone_num.class));
+        new Handler().postDelayed(() -> {
+            if(FireBaseUtil.isLoggedIn()){
+                startActivity(new Intent(Splash_activity.this, MainActivity.class));
+            }else{
+                startActivity(new Intent(getApplicationContext(),Login_phone_num.class));
 
-                }
-                finish();
             }
+            finish();
         },1000);
     }
 }
