@@ -9,7 +9,7 @@
     android:layout_height="wrap_content">
 
     <include
-        layout="@layout/proflle_pic_view"
+        layout="@layout/profile_pic_view"
         android:layout_width="52dp"
         android:layout_height="52dp"
         android:layout_gravity="center"

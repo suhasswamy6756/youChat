@@ -48,6 +48,13 @@ public class SearchActivity extends AppCompatActivity {
 
 
     }
+    void init(){
+        searchInput = findViewById(R.id.search_userName_input);
+        backButton = findViewById(R.id.back_btn);
+        searchButton = findViewById(R.id.search_user_button);
+        recyclerView = findViewById(R.id.recycler_view);
+
+    }
     void setUpSearchRecyclerView(String searchTerm){
 
         Query query = FireBaseUtil.AllUsercollectionReference()
@@ -61,13 +68,7 @@ public class SearchActivity extends AppCompatActivity {
         adapter.startListening();
 
     }
-    void init(){
-       searchInput = findViewById(R.id.search_userName_input);
-        backButton = findViewById(R.id.back_btn);
-        searchButton = findViewById(R.id.search_user_button);
-        recyclerView = findViewById(R.id.recycler_view);
 
-    }
 
     @Override
     protected void onStart() {

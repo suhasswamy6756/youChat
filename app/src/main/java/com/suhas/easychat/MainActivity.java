@@ -15,7 +15,7 @@ import com.google.android.material.navigation.NavigationBarView;
 public class MainActivity extends AppCompatActivity {
     BottomNavigationView bottomNavigationView;
     ImageButton searchButton;
-    chat_frag chatFrag;
+    ChatFragment chatFrag;
     ProfileFragment profileFragment;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,12 +23,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         init();
 
-        searchButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(getApplicationContext(),SearchActivity.class));
-            }
-        });
+        searchButton.setOnClickListener(view -> startActivity(new Intent(getApplicationContext(),SearchActivity.class)));
         bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -47,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
     void init(){
         bottomNavigationView = findViewById(R.id.bottom_navigation);
         searchButton = findViewById(R.id.search_btn);
-        chatFrag = new chat_frag();
+        chatFrag = new ChatFragment();
         profileFragment = new ProfileFragment();
     }
 }

@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SearchActivity">
+    tools:context=".ChatActivity">
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -12,16 +13,25 @@
         android:background="@color/my_primary"
         android:padding="10dp">
         <TextView
-
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/app_name"
+            android:text="Username"
+            android:textSize="22sp"
             android:background="@color/my_primary"
             android:textStyle="bold"
+            android:id="@+id/other_username"
             android:textColor="@color/white"
             android:layout_marginStart="10dp"
             android:layout_centerVertical="true"
-            android:layout_toRightOf="@+id/back_btn"
+            android:layout_toRightOf="@+id/profile_pic_layout"
+            />
+        <include layout="@layout/profile_pic_view"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="10dp"
+            android:layout_toEndOf="@+id/back_btn"
+            android:id="@+id/profile_pic_layout"
+
             />
 
         <ImageButton
@@ -37,49 +47,53 @@
 
     </RelativeLayout>
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/toolbar"
+        android:id="@+id/chat_recycler_view"
+        android:layout_above="@+id/bottom_layout"
+
+
+        />
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/toolbar"
-        android:layout_margin="10dp"
-        android:id="@+id/search_relative"
+        android:layout_height="80dp"
+        android:layout_alignParentBottom="true"
+        android:padding="10dp"
+        android:id="@+id/bottom_layout"
+
         >
 
         <EditText
-            android:id="@+id/search_userName_input"
+            android:id="@+id/chat_message_input"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
             android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
             android:layout_marginEnd="10dp"
             android:layout_marginBottom="10dp"
-            android:layout_toLeftOf="@+id/search_user_button"
+            android:layout_toLeftOf="@id/message_send_btn"
             android:background="@drawable/rounded_corner"
-            android:elevation="20dp"
-            android:hint="username"
+            android:elevation="2dp"
+            android:hint="write message here"
             android:minHeight="48dp"
-            android:padding="10dp" />
+            android:padding="10dp"
+            tools:ignore="TouchTargetSizeCheck" />
 
         <ImageButton
-            android:id="@+id/search_user_button"
-            android:layout_width="40dp"
+            android:id="@+id/message_send_btn"
+            android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
+            android:layout_centerInParent="true"
+            android:layout_marginStart="10dp"
+
             android:background="?attr/selectableItemBackgroundBorderless"
-            android:src="@drawable/baseline_search_24"
-
-
+            android:contentDescription="@string/app_name"
+            android:src="@drawable/baseline_send_24"
             app:tint="@color/my_primary" />
-
-
     </RelativeLayout>
-    <androidx.recyclerview.widget.RecyclerView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/search_relative"
-        android:padding="10dp"
-        android:id="@+id/recycler_view"
-        />
 
 </RelativeLayout>

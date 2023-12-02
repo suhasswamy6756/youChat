@@ -6,6 +6,8 @@ public class UserModel {
     private String phone;
     private String username;
     private String USerId;
+    public UserModel() {
+    }
 
     public String getUSerId() {
         return USerId;
@@ -48,6 +50,5 @@ public class UserModel {
         this.createdTimeStamp = createdTimeStamp;
     }
 
-    public UserModel() {
-    }
+
 }

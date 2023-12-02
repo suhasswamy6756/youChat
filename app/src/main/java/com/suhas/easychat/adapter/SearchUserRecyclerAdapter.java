@@ -2,6 +2,7 @@ package com.suhas.easychat.adapter;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,8 +14,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.suhas.easychat.ChatActivity;
 import com.suhas.easychat.R;
 import com.suhas.easychat.model.UserModel;
+import com.suhas.easychat.utils.AndroidUtil;
 import com.suhas.easychat.utils.FireBaseUtil;
 
 public class SearchUserRecyclerAdapter extends FirestoreRecyclerAdapter<UserModel, SearchUserRecyclerAdapter.UserModeViewHolder> {
@@ -36,6 +39,10 @@ public class SearchUserRecyclerAdapter extends FirestoreRecyclerAdapter<UserMode
         }
         holder.itemView.setOnClickListener(view -> {
 //            navigate to chat Activity...
+            Intent intent = new Intent(context, ChatActivity.class);
+            AndroidUtil.passUserModelAsIntent(intent,model);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(intent);
         });
     }
 
