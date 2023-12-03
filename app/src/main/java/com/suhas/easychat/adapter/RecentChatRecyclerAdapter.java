@@ -3,6 +3,7 @@ package com.suhas.easychat.adapter;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,15 +36,31 @@ public class RecentChatRecyclerAdapter extends FirestoreRecyclerAdapter<ChatRoom
     @SuppressLint("SetTextI18n")
     @Override
     protected void onBindViewHolder(@NonNull ChatRoomModelViewHolder holder, int position, @NonNull ChatRoomModel model) {
-        FireBaseUtil.getOtherUserFromChatRoom(model.getUserIds())
-                .get().addOnCompleteListener(task -> {
-                    if(task.isSuccessful()){
-                        UserModel otherUserModel = task.getResult().toObject(UserModel.class);
-                        holder.UserName_text.setText(otherUserModel.getUsername());
-                        holder.last_message_text.setText(model.getLastMessage());
-                        holder.lastMessageTime.setText(FireBaseUtil.timeStampToString(model.getLastmessageTimestamp()));
-                    }
-                });
+        Log.d("Adapter", "onBindViewHolder called for position: " + position);
+
+            FireBaseUtil.getOtherUserFromChatRoom(model.getUserIds())
+                    .get().addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            boolean lastMessageSendByMe = model.getLastMessageSenderId().equals(FireBaseUtil.currentUserId());
+
+
+                            UserModel otherUserModel = task.getResult().toObject(UserModel.class);
+                            holder.UserName_text.setText(otherUserModel.getUsername());
+                            if(lastMessageSendByMe)
+                                holder.last_message_text.setText("You: "+model.getLastMessage());
+                            else
+                                holder.last_message_text.setText(model.getLastMessage());
+                            holder.lastMessageTime.setText(FireBaseUtil.timeStampToString(model.getLastmessageTimestamp()));
+                            holder.itemView.setOnClickListener(view -> {
+//
+                                Intent intent = new Intent(context, ChatActivity.class);
+                                AndroidUtil.passUserModelAsIntent(intent,otherUserModel);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                context.startActivity(intent);
+                            });
+                        }
+                    });
+
     }
 
     @NonNull
@@ -54,7 +71,7 @@ public class RecentChatRecyclerAdapter extends FirestoreRecyclerAdapter<ChatRoom
         return new ChatRoomModelViewHolder(view);
     }
 
-    class ChatRoomModelViewHolder extends RecyclerView.ViewHolder{
+    static class ChatRoomModelViewHolder extends RecyclerView.ViewHolder{
         TextView UserName_text;
         TextView last_message_text;
         TextView lastMessageTime;

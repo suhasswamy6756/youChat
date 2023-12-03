@@ -121,4 +121,7 @@ public class ChatActivity extends AppCompatActivity {
 //        profile_pic = findViewById(R.id.profile_pic_layout);
         recyclerView = findViewById(R.id.chat_recycler_view);
     }
+
+
+
 }

@@ -1,12 +1,16 @@
 package com.suhas.easychat;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,17 +44,22 @@ public class ChatFragment extends Fragment {
 
     void setUpRecyclerView(){
 
+
         Query query = FireBaseUtil.allChatRoomCollectionReference()
                 .whereArrayContains("userIds",FireBaseUtil.currentUserId())
                 .orderBy("lastmessageTimestamp",Query.Direction.DESCENDING);
         FirestoreRecyclerOptions<ChatRoomModel> options = new FirestoreRecyclerOptions.Builder<ChatRoomModel>()
                 .setQuery(query,ChatRoomModel.class).build();
+
+
+
         adapter = new RecentChatRecyclerAdapter(options,getContext());
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(adapter);
         adapter.startListening();
 
     }
+
 
 
     @Override
@@ -69,11 +78,11 @@ public class ChatFragment extends Fragment {
 
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     @Override
     public void onResume() {
         super.onResume();
-        if(adapter!=null){
-            adapter.startListening();
-        }
+        if(adapter!=null)
+            adapter.notifyDataSetChanged();
     }
 }
