@@ -3,6 +3,7 @@ package com.suhas.easychat.adapter;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -45,6 +46,15 @@ public class RecentChatRecyclerAdapter extends FirestoreRecyclerAdapter<ChatRoom
 
 
                             UserModel otherUserModel = task.getResult().toObject(UserModel.class);
+
+                            FireBaseUtil.getOtherProfilePicStorageRef(otherUserModel.getUSerId()).getDownloadUrl()
+                                    .addOnCompleteListener(t -> {
+                                        if(t.isSuccessful()){
+                                            Uri uri = t.getResult();
+                                            AndroidUtil.setProfilePic(context,uri,holder.ProfilePic);
+                                        }
+                                    });
+
                             holder.UserName_text.setText(otherUserModel.getUsername());
                             if(lastMessageSendByMe)
                                 holder.last_message_text.setText("You: "+model.getLastMessage());

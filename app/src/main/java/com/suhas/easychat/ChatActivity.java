@@ -1,9 +1,11 @@
 package com.suhas.easychat;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -38,6 +40,7 @@ public class ChatActivity extends AppCompatActivity {
     EditText message_input;
     TextView otherUserName;
     RecyclerView recyclerView;
+    ImageView imageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +60,13 @@ public class ChatActivity extends AppCompatActivity {
             }
             sendMessageToUser(message);
         });
+        FireBaseUtil.getOtherProfilePicStorageRef(otherUsers.getUSerId()).getDownloadUrl()
+                .addOnCompleteListener(t -> {
+                    if(t.isSuccessful()){
+                        Uri uri = t.getResult();
+                        AndroidUtil.setProfilePic(this,uri,imageView);
+                    }
+                });
 
         getOrCreateChatroomModel();
         setUpChatRecyclerView();
@@ -120,6 +130,7 @@ public class ChatActivity extends AppCompatActivity {
         message_send_btn = findViewById(R.id.message_send_btn);
 //        profile_pic = findViewById(R.id.profile_pic_layout);
         recyclerView = findViewById(R.id.chat_recycler_view);
+        imageView = findViewById(R.id.profile_pic_image_view);
     }
 
 

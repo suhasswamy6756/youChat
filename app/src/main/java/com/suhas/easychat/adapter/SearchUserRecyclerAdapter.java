@@ -3,6 +3,7 @@ package com.suhas.easychat.adapter;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,6 +38,15 @@ public class SearchUserRecyclerAdapter extends FirestoreRecyclerAdapter<UserMode
             holder.UserName_text.setText(model.getUsername()+"(Me)");
 
         }
+
+        FireBaseUtil.getOtherProfilePicStorageRef(model.getUSerId()).getDownloadUrl()
+                .addOnCompleteListener(t -> {
+                    if(t.isSuccessful()){
+                        Uri uri = t.getResult();
+                        AndroidUtil.setProfilePic(context,uri,holder.ProfilePic);
+                    }
+                });
+
         holder.itemView.setOnClickListener(view -> {
 //            navigate to chat Activity...
             Intent intent = new Intent(context, ChatActivity.class);

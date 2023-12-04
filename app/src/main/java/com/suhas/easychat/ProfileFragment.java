@@ -1,8 +1,15 @@
 package com.suhas.easychat;
 
+import android.app.Activity;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContract;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -14,12 +21,16 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.github.dhaval2404.imagepicker.ImagePicker;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.suhas.easychat.model.UserModel;
 import com.suhas.easychat.utils.AndroidUtil;
 import com.suhas.easychat.utils.FireBaseUtil;
+
+import kotlin.Unit;
+import kotlin.jvm.functions.Function1;
 
 
 public class ProfileFragment extends Fragment {
@@ -29,13 +40,27 @@ public class ProfileFragment extends Fragment {
     ProgressBar progressBar;
     TextView logoutBtn;
     UserModel currentUsermodel;
-
+    ActivityResultLauncher<Intent> imagePickLauncher;
+    Uri selectedimageUri;
 
     public ProfileFragment() {
 
     }
 
-
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        imagePickLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
+                result->{
+                    if(result.getResultCode() == Activity.RESULT_OK){
+                        Intent data = result.getData();
+                        if(data!=null && data.getData()!=null){
+                            selectedimageUri = data.getData();
+                            AndroidUtil.setProfilePic(getContext(),selectedimageUri,profilePic);
+                        }
+                    }
+                });
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -53,6 +78,22 @@ public class ProfileFragment extends Fragment {
         updateProfile.setOnClickListener(view1 -> {
             updateBtnClick();
         });
+        logoutBtn.setOnClickListener(view12 -> {
+            FireBaseUtil.logout();
+            Intent intent = new Intent(getContext(),Splash_activity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+        });
+        profilePic.setOnClickListener(view13 -> {
+            ImagePicker.with(this).cropSquare().compress(512).maxResultSize(512,512)
+                    .createIntent(new Function1<Intent, Unit>() {
+                        @Override
+                        public Unit invoke(Intent intent) {
+                            imagePickLauncher.launch(intent);
+                            return null;
+                        }
+                    });
+        });
         return view;
     }
     void updateBtnClick(){
@@ -63,7 +104,16 @@ public class ProfileFragment extends Fragment {
         }
         currentUsermodel.setUsername(NewUsername);
         setInProgress(true);
-        UpdateToFireStore();
+
+        if(selectedimageUri!=null){
+            FireBaseUtil.getCurrentProfilePicStorageRef().putFile(selectedimageUri)
+                    .addOnCompleteListener(task -> {
+                        UpdateToFireStore();
+                    });
+
+        }else{
+            UpdateToFireStore();
+        }
     }
     void UpdateToFireStore(){
         FireBaseUtil.currentUserDetails().set(currentUsermodel)
@@ -80,6 +130,14 @@ public class ProfileFragment extends Fragment {
     }
     void getUserData(){
         setInProgress(true);
+
+        FireBaseUtil.getCurrentProfilePicStorageRef().getDownloadUrl()
+                        .addOnCompleteListener(task -> {
+                            if(task.isSuccessful()){
+                                Uri uri = task.getResult();
+                                AndroidUtil.setProfilePic(getContext(),uri,profilePic);
+                            }
+                        });
         FireBaseUtil.currentUserDetails().get().addOnCompleteListener(task -> {
             setInProgress(false);
             currentUsermodel = task.getResult().toObject(UserModel.class);
