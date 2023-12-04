@@ -25,6 +25,7 @@ import com.github.dhaval2404.imagepicker.ImagePicker;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.suhas.easychat.model.UserModel;
 import com.suhas.easychat.utils.AndroidUtil;
 import com.suhas.easychat.utils.FireBaseUtil;
@@ -79,10 +80,18 @@ public class ProfileFragment extends Fragment {
             updateBtnClick();
         });
         logoutBtn.setOnClickListener(view12 -> {
-            FireBaseUtil.logout();
-            Intent intent = new Intent(getContext(),Splash_activity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
+            FirebaseMessaging.getInstance().deleteToken().addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    if(task.isSuccessful()){
+                        FireBaseUtil.logout();
+                        Intent intent = new Intent(getContext(),Splash_activity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(intent);
+                    }
+                }
+            });
+
         });
         profilePic.setOnClickListener(view13 -> {
             ImagePicker.with(this).cropSquare().compress(512).maxResultSize(512,512)

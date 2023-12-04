@@ -50,7 +50,7 @@ public class RecentChatRecyclerAdapter extends FirestoreRecyclerAdapter<ChatRoom
                             FireBaseUtil.getOtherProfilePicStorageRef(otherUserModel.getUSerId()).getDownloadUrl()
                                     .addOnCompleteListener(t -> {
                                         if(t.isSuccessful()){
-                                            Uri uri = t.getResult();
+                                             Uri uri = t.getResult();
                                             AndroidUtil.setProfilePic(context,uri,holder.ProfilePic);
                                         }
                                     });
