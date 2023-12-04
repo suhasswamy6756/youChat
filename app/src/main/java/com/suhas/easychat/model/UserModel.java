@@ -4,16 +4,16 @@ import com.google.firebase.Timestamp;
 
 public class UserModel {
     private String phone;
-    String FCMToken;
+    private String fcmToken;
     private String username;
     private String USerId;
 
-    public String getFCMToken() {
-        return FCMToken;
+    public String getFcmToken() {
+        return fcmToken;
     }
 
-    public void setFCMToken(String FCMToken) {
-        this.FCMToken = FCMToken;
+    public void setFcmToken(String fcmToken) {
+        this.fcmToken = fcmToken;
     }
 
     public UserModel() {
