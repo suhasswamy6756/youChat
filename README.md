@@ -51,12 +51,7 @@ Welcome to **youChat**, a real-time chat application built using **Android (Java
 - Sync the Gradle files.
 - Run the app on an **Android emulator** or a **physical device**.
 
-## 🎯 Future Enhancements
 
-🔹 **Group chat support** 👥\
-🔹 **Voice and video calling** 📞🎥\
-🔹 **Custom emojis and stickers** 😃\
-🔹 **End-to-end encryption for chats** 🔐
 
 ## 🤝 Contributing
 
