@@ -23,10 +23,6 @@ Welcome to **youChat**, a real-time chat application built using **Android (Java
 - **Storage**: Firebase Storage 🗂️
 - **UI Design**: XML & Material Design 🎨
 
-## 📸 Screenshots
-
-✨ *Add screenshots of your app interface here* ✨
-
 ## 🔧 Installation & Setup
 
 ### 1️⃣ Clone the Repository
